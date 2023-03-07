@@ -2089,6 +2089,7 @@ static ngx_int_t nchan_store_subscribe(ngx_str_t *channel_id, subscriber_t *sub)
   if(sub->cf->redis.enabled && memstore_slot() == owner && !nchan_store_redis_ready(sub->cf)) {
     ERR("Im not ready yet");
     nchan_respond_status(sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
+    ctx->request_ran_content_handler = 1;
     return NGX_OK;
   }
 

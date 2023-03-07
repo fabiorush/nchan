@@ -2114,6 +2114,7 @@ static ngx_int_t nchan_store_subscribe(ngx_str_t *channel_id, subscriber_t *sub)
       nchan_store_subscribe_stage2(0, NULL, d);
       return NGX_ERROR;
     }
+    ERR("I (%d) gonna check if %d is ready?", owner, d->channel_owner);
   } else {
     ERR("I (%d) ready :)", owner);
     return nchan_store_subscribe_stage2(1, NULL, d);

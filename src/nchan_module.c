@@ -746,6 +746,7 @@ ngx_int_t nchan_pubsub_handler(ngx_http_request_t *r) {
     return NGX_OK;
   }
   
+  #if 0
   if(cf->redis.enabled && !nchan_store_redis_ready(cf)) {
     //using redis, and it's not ready yet
     if(r->method == NGX_HTTP_POST || r->method == NGX_HTTP_PUT) {
@@ -757,6 +758,7 @@ ngx_int_t nchan_pubsub_handler(ngx_http_request_t *r) {
     }
     return NGX_OK;
   }
+  #endif
   
   if(cf->pub.websocket || cf->pub.http) {
     char *err;

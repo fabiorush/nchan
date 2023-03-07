@@ -2087,6 +2087,7 @@ static ngx_int_t nchan_store_subscribe(ngx_str_t *channel_id, subscriber_t *sub)
   subscribe_data_t            *d;// = subscribe_data_alloc(sub->cf->redis.enabled ? -1 : owner);
 
   if(sub->cf->redis.enabled && memstore_slot() == owner && !nchan_store_redis_ready(sub->cf)) {
+    ERR("I (%d) not ready yet", owner);
     nchan_respond_status(sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
     return NGX_OK;
   }
@@ -2114,6 +2115,7 @@ static ngx_int_t nchan_store_subscribe(ngx_str_t *channel_id, subscriber_t *sub)
       return NGX_ERROR;
     }
   } else {
+    ERR("I (%d) ready :)", owner);
     return nchan_store_subscribe_stage2(1, NULL, d);
   }
   return NGX_OK;
@@ -2144,6 +2146,7 @@ static ngx_int_t nchan_store_subscribe_stage2(ngx_int_t continue_subscription, v
   } else {
     //using redis, and it's not ready yet
     // if(d->reserved) {
+    ERR("I (%d) discovered that %d is not ready", memstore_slot(), d->channel_owner);
     if(d->sub->fn->release(d->sub, 0) == NGX_OK) {
       d->reserved = 0;
       nchan_respond_status(d->sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);

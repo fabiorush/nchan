@@ -191,6 +191,7 @@ static ngx_int_t ipc_write_alert_fd(ngx_socket_t fd, ipc_alert_t *alert) {
   ngx_int_t   err;
   
   n = write(fd, alert, sizeof(*alert));
+  ngx_log_error(NGX_LOG_ALERT, ngx_cycle->log, 0, "-= FLUS =- fd: %d", fd);
  
   if (n == -1) {
     err = ngx_errno;

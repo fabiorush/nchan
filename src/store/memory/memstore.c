@@ -2086,14 +2086,6 @@ static ngx_int_t nchan_store_subscribe(ngx_str_t *channel_id, subscriber_t *sub)
   ngx_int_t                    owner = memstore_channel_owner(channel_id);
   subscribe_data_t            *d;// = subscribe_data_alloc(sub->cf->redis.enabled ? -1 : owner);
 
-  if(sub->cf->redis.enabled && memstore_slot() == owner && !nchan_store_redis_ready(sub->cf)) {
-    nchan_request_ctx_t *ctx = ngx_http_get_module_ctx(sub->request, ngx_nchan_module);
-    ERR("Im not ready yet");
-    nchan_respond_status(sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
-    ctx->request_ran_content_handler = 1;
-    return NGX_OK;
-  }
-
   d = subscribe_data_alloc(sub->cf->redis.enabled ? -1 : owner);
   
   assert(d != NULL);

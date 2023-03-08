@@ -828,6 +828,14 @@ ngx_int_t nchan_pubsub_handler(ngx_http_request_t *r) {
 #if FAKESHARD
           memstore_sub_debug_start();
 #endif
+
+          if(cf->redis.enabled && memstore_slot() == memstore_channel_owner(channel_id) && !nchan_store_redis_ready(cf)) {
+            ERR("Im not ready yet");
+            nchan_respond_status(sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
+            // ctx->request_ran_content_handler = 1;
+            return NGX_OK;
+          }
+
           if((msg_id = nchan_subscriber_get_msg_id(r)) == NULL) {
             goto bad_msgid;
           }

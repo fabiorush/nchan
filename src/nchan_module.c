@@ -829,9 +829,9 @@ ngx_int_t nchan_pubsub_handler(ngx_http_request_t *r) {
           memstore_sub_debug_start();
 #endif
 
-          if(cf->redis.enabled && memstore_slot() == memstore_channel_owner(channel_id) && !nchan_store_redis_ready(cf)) {
-            ERR("Im not ready yet");
-            nchan_respond_status(sub->request, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
+          if(cf->redis.enabled && ngx_process_slot == memstore_channel_owner(channel_id) && !nchan_store_redis_ready(cf)) {
+            ngx_log_error(NGX_LOG_ERR, ngx_cycle->log, 0, "MEMSTORE:%02i: Im not ready yet", ngx_process_slot);
+            nchan_respond_status(r, NGX_HTTP_SERVICE_UNAVAILABLE, NULL, NULL, 0);
             // ctx->request_ran_content_handler = 1;
             return NGX_OK;
           }
